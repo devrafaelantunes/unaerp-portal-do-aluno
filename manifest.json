@@ -1,0 +1,16 @@
+{
+  "name": "UNAERP – Aluno Online",
+  "short_name": "UNAERP",
+  "start_url": "/unaerp-portal-do-aluno/",
+  "display": "standalone",
+  "background_color": "#1e3d7a",
+  "theme_color": "#1e3d7a",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
