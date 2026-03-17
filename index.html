@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>UNAERP – Aluno Online</title>
+  <style>
+    :root {
+      --azul: #1a2e6e;
+      --azul2: #2a4a9e;
+      --amarelo: #f5c400;
+      --verde: #1a8240;
+      --vermelho: #b71c1c;
+      --laranja: #c07000;
+      --cinza: #f4f6fb;
+      --borda: #e0e4f0;
+      --texto: #333;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #eef1f8; color: var(--texto); }
+
+    /* ──────── LOGIN ──────── */
+    #login-page {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #111e4a 0%, #1a2e6e 50%, #243d8f 100%);
+      display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px;
+    }
+    .login-top { text-align: center; margin-bottom: 28px; }
+    .login-logo-mark {
+      width: 70px; height: 70px; background: var(--amarelo); border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.2rem; font-weight: 900; color: var(--azul); margin: 0 auto 12px; letter-spacing: -1px;
+    }
+    .login-top h1 { color: #fff; font-size: 1.5rem; font-weight: 800; letter-spacing: 1px; }
+    .login-top p { color: #a8bcec; font-size: .82rem; margin-top: 4px; }
+    .login-box {
+      background: #fff; border-radius: 14px; padding: 36px 32px 28px;
+      width: 100%; max-width: 390px; box-shadow: 0 12px 40px rgba(0,0,0,.3);
+    }
+    .login-box h2 { font-size: .95rem; color: #555; margin-bottom: 24px; text-align: center; }
+    .fg { margin-bottom: 16px; }
+    .fg label { display: block; font-size: .8rem; font-weight: 600; color: #555; margin-bottom: 5px; }
+    .fg input {
+      width: 100%; padding: 11px 14px; border: 1.5px solid var(--borda); border-radius: 8px;
+      font-size: .95rem; outline: none; transition: border .2s; background: #fafbff;
+    }
+    .fg input:focus { border-color: var(--azul); background: #fff; }
+    .btn-primary {
+      width: 100%; padding: 12px; background: var(--azul); color: #fff;
+      border: none; border-radius: 8px; font-size: 1rem; font-weight: 700;
+      cursor: pointer; margin-top: 6px; letter-spacing: .5px; transition: background .2s;
+    }
+    .btn-primary:hover { background: var(--azul2); }
+    .login-links { display: flex; justify-content: space-between; margin-top: 16px; }
+    .login-links a { font-size: .78rem; color: var(--azul); text-decoration: none; }
+    .login-links a:hover { text-decoration: underline; }
+    .login-footer-info { margin-top: 20px; text-align: center; font-size: .72rem; color: rgba(255,255,255,.4); }
+
+    /* ──────── PORTAL LAYOUT ──────── */
+    #portal-page { display: none; }
+    .portal-wrap { display: flex; min-height: 100vh; }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width: 230px; min-height: 100vh; background: var(--azul);
+      display: flex; flex-direction: column; flex-shrink: 0;
+      position: fixed; top: 0; left: 0; bottom: 0; z-index: 100;
+      transition: transform .3s;
+    }
+    .sb-logo {
+      padding: 18px 20px; border-bottom: 1px solid rgba(255,255,255,.1);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .sb-logo .mark {
+      width: 36px; height: 36px; background: var(--amarelo); border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; font-weight: 900; color: var(--azul); flex-shrink: 0;
+    }
+    .sb-logo span { color: #fff; font-weight: 700; font-size: 1rem; }
+    .sb-logo small { display: block; color: #8a9fd4; font-size: .68rem; font-weight: 400; }
+    .sb-user {
+      padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,.08);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .sb-avatar {
+      width: 40px; height: 40px; background: var(--azul2); border: 2px solid rgba(255,255,255,.2);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; color: #fff; font-weight: 700; flex-shrink: 0;
+    }
+    .sb-user-info { overflow: hidden; }
+    .sb-user-info p { color: #fff; font-size: .82rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .sb-user-info small { color: #8a9fd4; font-size: .7rem; }
+    .sb-nav { flex: 1; padding: 10px 0; overflow-y: auto; }
+    .sb-section { color: #5a7ac0; font-size: .65rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 14px 20px 6px; }
+    .sb-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 20px; color: #c8d4f0; font-size: .85rem; cursor: pointer;
+      transition: all .15s; border-left: 3px solid transparent;
+    }
+    .sb-item:hover { background: rgba(255,255,255,.07); color: #fff; }
+    .sb-item.active { background: rgba(255,255,255,.1); color: #fff; border-left-color: var(--amarelo); }
+    .sb-item .ico { width: 18px; text-align: center; flex-shrink: 0; }
+    .sb-badge { margin-left: auto; background: #e74c3c; color: #fff; font-size: .65rem; padding: 1px 6px; border-radius: 10px; font-weight: 700; }
+    .sb-bottom { padding: 16px 20px; border-top: 1px solid rgba(255,255,255,.08); }
+    .sb-bottom button {
+      width: 100%; padding: 9px; background: rgba(255,255,255,.08); color: #c8d4f0;
+      border: 1px solid rgba(255,255,255,.12); border-radius: 8px; cursor: pointer;
+      font-size: .82rem; transition: background .2s;
+    }
+    .sb-bottom button:hover { background: rgba(255,255,255,.15); }
+
+    /* ── MAIN ── */
+    .main-area { margin-left: 230px; flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+    .topbar {
+      background: #fff; padding: 0 24px; height: 54px; display: flex;
+      align-items: center; justify-content: space-between;
+      box-shadow: 0 1px 6px rgba(0,0,0,.08); position: sticky; top: 0; z-index: 50;
+    }
+    .topbar-title { font-size: 1rem; font-weight: 700; color: var(--azul); }
+    .topbar-right { display: flex; align-items: center; gap: 14px; }
+    .notif-btn {
+      width: 36px; height: 36px; background: var(--cinza); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 1rem; position: relative; border: none;
+    }
+    .notif-dot {
+      position: absolute; top: 6px; right: 6px;
+      width: 8px; height: 8px; background: #e74c3c; border-radius: 50%; border: 1.5px solid #fff;
+    }
+    .semestre-chip { background: var(--cinza); border: 1px solid var(--borda); border-radius: 20px; padding: 4px 12px; font-size: .75rem; color: #666; }
+    .hamburger { display: none; background: none; border: none; font-size: 1.4rem; cursor: pointer; color: var(--azul); }
+
+    .content { padding: 20px 24px 40px; flex: 1; }
+
+    /* ── CARDS SUMMARY ── */
+    .summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 22px; }
+    .sum-card {
+      background: #fff; border-radius: 12px; padding: 18px;
+      box-shadow: 0 2px 8px rgba(0,0,0,.06); display: flex; align-items: center; gap: 14px;
+    }
+    .sum-icon {
+      width: 46px; height: 46px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0;
+    }
+    .sum-icon.azul { background: #e8edf8; }
+    .sum-icon.verde { background: #e6f9ed; }
+    .sum-icon.amarelo { background: #fff8e0; }
+    .sum-icon.vermelho { background: #fdecea; }
+    .sum-label { font-size: .72rem; color: #888; font-weight: 500; }
+    .sum-val { font-size: 1.4rem; font-weight: 800; color: var(--azul); line-height: 1; margin-top: 2px; }
+    .sum-sub { font-size: .7rem; color: #aaa; margin-top: 2px; }
+
+    /* ── PANEL ── */
+    .panel { background: #fff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,.06); overflow: hidden; margin-bottom: 18px; }
+    .panel-header {
+      background: var(--azul); color: #fff; padding: 13px 18px;
+      font-size: .88rem; font-weight: 600; display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    }
+    .panel-header a { color: var(--amarelo); font-size: .75rem; font-weight: 500; text-decoration: none; }
+    .panel-body { padding: 16px 18px; }
+
+    /* ── TABLE ── */
+    .tbl { width: 100%; border-collapse: collapse; font-size: .83rem; }
+    .tbl th { background: var(--cinza); color: #555; font-weight: 600; padding: 9px 10px; text-align: left; border-bottom: 2px solid var(--borda); }
+    .tbl td { padding: 10px 10px; border-bottom: 1px solid #f0f2f8; color: #444; vertical-align: middle; }
+    .tbl tr:last-child td { border-bottom: none; }
+    .tbl tr:hover td { background: #fafbff; }
+    .chip { display: inline-block; padding: 2px 9px; border-radius: 20px; font-size: .72rem; font-weight: 700; }
+    .chip.pago { background: #e6f9ed; color: var(--verde); }
+    .chip.pendente { background: #fff3e0; color: var(--laranja); }
+    .chip.vencido { background: #fdecea; color: var(--vermelho); }
+    .chip.cursando { background: #e8edf8; color: var(--azul); }
+    .chip.aprovado { background: #e6f9ed; color: var(--verde); }
+    .chip.reprovado { background: #fdecea; color: var(--vermelho); }
+    .chip.ativo { background: #e6f9ed; color: var(--verde); }
+    .nota-ok { color: var(--verde); font-weight: 700; }
+    .nota-med { color: var(--laranja); font-weight: 700; }
+    .nota-bad { color: var(--vermelho); font-weight: 700; }
+
+    /* ── TWO COL ── */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; }
+
+    /* ── PROFILE ── */
+    .profile-hero {
+      background: linear-gradient(135deg, var(--azul), var(--azul2));
+      border-radius: 12px; padding: 28px 24px;
+      display: flex; align-items: center; gap: 24px; margin-bottom: 18px;
+      box-shadow: 0 4px 16px rgba(26,46,110,.25); flex-wrap: wrap;
+    }
+    .profile-avatar-big {
+      width: 80px; height: 80px; border-radius: 50%;
+      background: rgba(255,255,255,.15); border: 3px solid rgba(255,255,255,.3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.2rem; color: #fff; font-weight: 700; flex-shrink: 0;
+    }
+    .profile-info h2 { color: #fff; font-size: 1.3rem; font-weight: 700; }
+    .profile-info p { color: #a8bcec; font-size: .85rem; margin-top: 4px; }
+    .profile-badges { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .pbadge {
+      background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2);
+      border-radius: 20px; padding: 4px 14px; color: #fff; font-size: .78rem;
+    }
+    .pbadge.gold { background: rgba(245,196,0,.2); border-color: var(--amarelo); color: var(--amarelo); font-weight: 700; }
+
+    /* ── HORÁRIO GRID ── */
+    .hg { display: grid; grid-template-columns: 65px repeat(5,1fr); gap: 4px; font-size: .75rem; }
+    .hgh { background: var(--azul); color: #fff; text-align: center; padding: 7px 3px; border-radius: 6px; font-weight: 700; font-size: .72rem; }
+    .hgt { background: #f0f2f8; color: #666; text-align: center; padding: 12px 3px; border-radius: 6px; font-weight: 600; font-size: .7rem; }
+    .hgc {
+      background: #e8edf8; color: var(--azul); text-align: center;
+      padding: 8px 3px; border-radius: 6px; font-size: .68rem; line-height: 1.35;
+    }
+    .hgc strong { display: block; font-weight: 700; font-size: .72rem; }
+    .hgc span { color: #6a82c8; }
+    .hge { background: #f9fafb; border-radius: 6px; }
+
+    /* ── CALENDAR ── */
+    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+    .cal-day-header { text-align: center; font-size: .68rem; font-weight: 700; color: #888; padding: 4px; }
+    .cal-day {
+      text-align: center; padding: 7px 3px; border-radius: 6px;
+      font-size: .78rem; color: #555; cursor: default;
+    }
+    .cal-day.other { color: #ccc; }
+    .cal-day.today { background: var(--azul); color: #fff; font-weight: 700; }
+    .cal-day.event { background: #fff3e0; color: var(--laranja); font-weight: 600; }
+    .cal-day.prova { background: #fdecea; color: var(--vermelho); font-weight: 700; }
+    .cal-legend { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 12px; }
+    .cal-legend-item { display: flex; align-items: center; gap: 5px; font-size: .72rem; color: #666; }
+    .cal-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+    /* ── AVISOS ── */
+    .aviso-item {
+      padding: 12px 0; border-bottom: 1px solid #f0f2f8; display: flex; gap: 12px; align-items: flex-start;
+    }
+    .aviso-item:last-child { border-bottom: none; }
+    .aviso-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+    .aviso-icon.urgente { background: #fdecea; }
+    .aviso-icon.info { background: #e8edf8; }
+    .aviso-icon.ok { background: #e6f9ed; }
+    .aviso-title { font-size: .85rem; font-weight: 600; color: #333; }
+    .aviso-desc { font-size: .78rem; color: #777; margin-top: 2px; line-height: 1.4; }
+    .aviso-date { font-size: .68rem; color: #aaa; margin-top: 4px; }
+
+    /* ── TIMELINE ── */
+    .timeline { padding: 4px 0; }
+    .tl-item { display: flex; gap: 14px; padding: 10px 0; position: relative; }
+    .tl-left { display: flex; flex-direction: column; align-items: center; }
+    .tl-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--azul); flex-shrink: 0; margin-top: 3px; }
+    .tl-dot.amarelo { background: var(--amarelo); }
+    .tl-dot.verde { background: var(--verde); }
+    .tl-dot.cinza { background: #ccc; }
+    .tl-line { flex: 1; width: 2px; background: #e8edf8; }
+    .tl-content p { font-size: .83rem; color: #333; font-weight: 500; }
+    .tl-content small { font-size: .72rem; color: #999; }
+
+    /* ── REQUERIMENTOS ── */
+    .req-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
+    .req-card {
+      border: 1.5px solid var(--borda); border-radius: 10px; padding: 16px 14px;
+      text-align: center; cursor: pointer; transition: all .2s; background: #fafbff;
+    }
+    .req-card:hover { border-color: var(--azul); background: #f0f3fb; transform: translateY(-1px); }
+    .req-card .req-ico { font-size: 1.8rem; margin-bottom: 8px; }
+    .req-card p { font-size: .78rem; font-weight: 600; color: #444; line-height: 1.3; }
+    .req-card small { font-size: .7rem; color: #999; }
+
+    /* ── INFO CHIPS ── */
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+    .chip-info { background: #fff; border: 1px solid var(--borda); border-radius: 20px; padding: 5px 14px; font-size: .78rem; color: #555; box-shadow: 0 1px 3px rgba(0,0,0,.04); }
+    .chip-info strong { color: var(--azul); }
+
+    /* ── SECTION PAGES ── */
+    .section-page { display: none; }
+    .section-page.active { display: block; }
+
+    /* ── FINANCEIRO ── */
+    .fin-resumo { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin-bottom: 18px; }
+    .fin-card {
+      border-radius: 10px; padding: 16px 18px;
+    }
+    .fin-card.azul { background: linear-gradient(135deg, var(--azul), var(--azul2)); color: #fff; }
+    .fin-card.verde { background: linear-gradient(135deg, #1a6e3a, #27ae60); color: #fff; }
+    .fin-card.vermelho { background: linear-gradient(135deg, #922b1d, #c0392b); color: #fff; }
+    .fin-card p { font-size: .72rem; opacity: .8; }
+    .fin-card h3 { font-size: 1.6rem; font-weight: 800; margin-top: 4px; }
+    .fin-card small { font-size: .7rem; opacity: .7; }
+
+    /* ── PROGRESS BAR ── */
+    .prog-bar { background: #e8edf8; border-radius: 10px; height: 8px; overflow: hidden; margin-top: 6px; }
+    .prog-fill { height: 100%; border-radius: 10px; background: linear-gradient(90deg, var(--azul), var(--azul2)); }
+    .prog-fill.verde { background: linear-gradient(90deg, #27ae60, #1a8240); }
+    .prog-fill.amarelo { background: linear-gradient(90deg, #f5c400, #c9a000); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .sidebar { transform: translateX(-100%); }
+      .sidebar.open { transform: translateX(0); }
+      .main-area { margin-left: 0; }
+      .hamburger { display: block; }
+      .summary-grid { grid-template-columns: repeat(2, 1fr); }
+      .two-col { grid-template-columns: 1fr; }
+      .three-col { grid-template-columns: 1fr; }
+      .fin-resumo { grid-template-columns: 1fr; }
+      .hg { font-size: .6rem; }
+    }
+    @media (max-width: 480px) {
+      .summary-grid { grid-template-columns: 1fr 1fr; }
+      .content { padding: 14px 14px 40px; }
+      .profile-hero { padding: 18px; }
+    }
+
+    /* ── OVERLAY ── */
+    .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.4); z-index: 90; }
+    .overlay.open { display: block; }
+
+    footer { text-align: center; padding: 16px; font-size: .7rem; color: #aaa; border-top: 1px solid var(--borda); }
+  </style>
+</head>
+<body>
+
+<!-- ════════════════ LOGIN ════════════════ -->
+<div id="login-page">
+  <div class="login-top">
+    <div class="login-logo-mark">U</div>
+    <h1>UNAERP</h1>
+    <p>Universidade de Ribeirão Preto</p>
+  </div>
+  <div class="login-box">
+    <h2>Portal do Aluno — Graduação</h2>
+    <form onsubmit="doLogin(event)">
+      <div class="fg">
+        <label>Registro Acadêmico (RA)</label>
+        <input type="text" id="ra" placeholder="Ex: 202103456" autocomplete="username" required/>
+      </div>
+      <div class="fg">
+        <label>Senha</label>
+        <input type="password" id="senha" placeholder="••••••••" autocomplete="current-password" required/>
+      </div>
+      <button type="submit" class="btn-primary">Entrar</button>
+    </form>
+    <div class="login-links">
+      <a href="#">🔑 Esqueci minha senha</a>
+      <a href="#">📋 Primeiro acesso</a>
+    </div>
+  </div>
+  <div class="login-footer-info">© 2025 UNAERP · Seção de TI Acadêmica · v3.4.1</div>
+</div>
+
+<!-- ════════════════ PORTAL ════════════════ -->
+<div id="portal-page">
+  <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar" id="sidebar">
+    <div class="sb-logo">
+      <div class="mark">U</div>
+      <div>
+        <span>UNAERP</span>
+        <small>Portal do Aluno</small>
+      </div>
+    </div>
+    <div class="sb-user">
+      <div class="sb-avatar">R</div>
+      <div class="sb-user-info">
+        <p>Rafael Antunes</p>
+        <small>RA: 202103456</small>
+      </div>
+    </div>
+    <nav class="sb-nav">
+      <div class="sb-section">Principal</div>
+      <div class="sb-item active" onclick="nav('inicio')"><span class="ico">🏠</span> Início</div>
+      <div class="sb-item" onclick="nav('perfil')"><span class="ico">👤</span> Meu Perfil</div>
+      <div class="sb-item" onclick="nav('avisos')"><span class="ico">🔔</span> Avisos <span class="sb-badge">3</span></div>
+
+      <div class="sb-section">Acadêmico</div>
+      <div class="sb-item" onclick="nav('notas')"><span class="ico">📊</span> Notas e Faltas</div>
+      <div class="sb-item" onclick="nav('horario')"><span class="ico">📅</span> Grade Horária</div>
+      <div class="sb-item" onclick="nav('calendario')"><span class="ico">🗓</span> Calendário Acadêmico</div>
+      <div class="sb-item" onclick="nav('historico')"><span class="ico">📜</span> Histórico Escolar</div>
+      <div class="sb-item" onclick="nav('tcc')"><span class="ico">🎓</span> TCC / Estágio</div>
+
+      <div class="sb-section">Serviços</div>
+      <div class="sb-item" onclick="nav('financeiro')"><span class="ico">💳</span> Financeiro</div>
+      <div class="sb-item" onclick="nav('documentos')"><span class="ico">📄</span> Documentos</div>
+      <div class="sb-item" onclick="nav('requerimentos')"><span class="ico">📝</span> Requerimentos</div>
+      <div class="sb-item" onclick="nav('biblioteca')"><span class="ico">📚</span> Biblioteca</div>
+      <div class="sb-item" onclick="nav('ouvidoria')"><span class="ico">💬</span> Ouvidoria</div>
+    </nav>
+    <div class="sb-bottom">
+      <button onclick="doLogout()">⬅ Sair do Portal</button>
+    </div>
+  </div>
+
+  <!-- MAIN AREA -->
+  <div class="main-area">
+    <div class="topbar">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <button class="hamburger" onclick="toggleSidebar()">☰</button>
+        <span class="topbar-title" id="topbar-title">Início</span>
+      </div>
+      <div class="topbar-right">
+        <span class="semestre-chip">📅 2025.1</span>
+        <button class="notif-btn" onclick="nav('avisos')">🔔<span class="notif-dot"></span></button>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- ░░ INÍCIO ░░ -->
+      <div id="pg-inicio" class="section-page active">
+        <div class="profile-hero">
+          <div class="profile-avatar-big">R</div>
+          <div class="profile-info">
+            <h2>Olá, Rafael Antunes! 👋</h2>
+            <p>Engenharia de Software · 3º Ano · Noturno · 2025.1</p>
+            <div class="profile-badges">
+              <span class="pbadge">RA 202103456</span>
+              <span class="pbadge">Campus Ribeirão Preto</span>
+              <span class="pbadge gold">⭐ IEA 8,4</span>
+              <span class="pbadge">Situação: ATIVO</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Summary cards -->
+        <div class="summary-grid">
+          <div class="sum-card">
+            <div class="sum-icon azul">📊</div>
+            <div>
+              <div class="sum-label">Média Geral</div>
+              <div class="sum-val">8,4</div>
+              <div class="sum-sub">IEA Semestre</div>
+            </div>
+          </div>
+          <div class="sum-card">
+            <div class="sum-icon verde">✅</div>
+            <div>
+              <div class="sum-label">Freq. Média</div>
+              <div class="sum-val">88%</div>
+              <div class="sum-sub">Acima do mínimo (75%)</div>
+            </div>
+          </div>
+          <div class="sum-card">
+            <div class="sum-icon amarelo">💳</div>
+            <div>
+              <div class="sum-label">Próx. Boleto</div>
+              <div class="sum-val">Jun/25</div>
+              <div class="sum-sub">R$ 1.450 · vence 10/06</div>
+            </div>
+          </div>
+          <div class="sum-card">
+            <div class="sum-icon vermelho">🔔</div>
+            <div>
+              <div class="sum-label">Avisos</div>
+              <div class="sum-val">3</div>
+              <div class="sum-sub">Não lidos</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <!-- Avisos recentes -->
+          <div class="panel">
+            <div class="panel-header">🔔 Avisos Recentes <a href="#" onclick="nav('avisos');return false;">Ver todos</a></div>
+            <div class="panel-body">
+              <div class="aviso-item">
+                <div class="aviso-icon urgente">⚠️</div>
+                <div>
+                  <div class="aviso-title">Prazo de Rematrícula</div>
+                  <div class="aviso-desc">Rematrícula para 2025.2 até 30/06/2025. Regularize pendências financeiras.</div>
+                  <div class="aviso-date">17/03/2025</div>
+                </div>
+              </div>
+              <div class="aviso-item">
+                <div class="aviso-icon info">📢</div>
+                <div>
+                  <div class="aviso-title">Semana Acadêmica — SEAUNAERP</div>
+                  <div class="aviso-desc">Inscrições abertas para a Semana Acadêmica de Engenharia — 20 a 24/04.</div>
+                  <div class="aviso-date">14/03/2025</div>
+                </div>
+              </div>
+              <div class="aviso-item">
+                <div class="aviso-icon ok">✅</div>
+                <div>
+                  <div class="aviso-title">Notas N2 Lançadas</div>
+                  <div class="aviso-desc">Notas da 2ª avaliação disponíveis. Prazo de revisão: até 20/03.</div>
+                  <div class="aviso-date">12/03/2025</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Próximas provas -->
+          <div class="panel">
+            <div class="panel-header">📝 Próximas Avaliações</div>
+            <div class="panel-body">
+              <div class="timeline">
+                <div class="tl-item">
+                  <div class="tl-left"><div class="tl-dot vermelho"></div><div class="tl-line"></div></div>
+                  <div class="tl-content"><p>N3 — Cálculo II</p><small>20/03/2025 · Sala 301 · 20h00</small></div>
+                </div>
+                <div class="tl-item">
+                  <div class="tl-left"><div class="tl-dot amarelo"></div><div class="tl-line"></div></div>
+                  <div class="tl-content"><p>N3 — Redes de Computadores</p><small>22/03/2025 · Sala 204 · 19h00</small></div>
+                </div>
+                <div class="tl-item">
+                  <div class="tl-left"><div class="tl-dot amarelo"></div><div class="tl-line"></div></div>
+                  <div class="tl-content"><p>N3 — Programação Funcional</p><small>25/03/2025 · Lab 2 · 20h50</small></div>
+                </div>
+                <div class="tl-item">
+                  <div class="tl-left"><div class="tl-dot verde"></div><div class="tl-line"></div></div>
+                  <div class="tl-content"><p>Entrega TCC — Proposta</p><small>31/03/2025 · Via Portal</small></div>
+                </div>
+                <div class="tl-item">
+                  <div class="tl-left"><div class="tl-dot cinza"></div></div>
+                  <div class="tl-content"><p>Férias Recesso Acadêmico</p><small>Jul/2025</small></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Notas resumo -->
+        <div class="panel">
+          <div class="panel-header">📊 Notas — Resumo 2025.1 <a href="#" onclick="nav('notas');return false;">Ver completo</a></div>
+          <div class="panel-body" style="overflow-x:auto;">
+            <table class="tbl">
+              <tr><th>Disciplina</th><th>N1</th><th>N2</th><th>N3</th><th>Média</th><th>Freq.</th><th>Status</th></tr>
+              <tr><td>Engenharia de Software II</td><td>8,5</td><td>9,0</td><td>—</td><td class="nota-ok">8,75</td><td>88%</td><td><span class="chip aprovado">APROVADO</span></td></tr>
+              <tr><td>Banco de Dados II</td><td>7,5</td><td>8,0</td><td>—</td><td class="nota-ok">7,75</td><td>92%</td><td><span class="chip aprovado">APROVADO</span></td></tr>
+              <tr><td>Redes de Computadores</td><td>6,0</td><td>7,5</td><td>—</td><td class="nota-med">6,75</td><td>78%</td><td><span class="chip cursando">CURSANDO</span></td></tr>
+              <tr><td>Cálculo II</td><td>5,5</td><td>6,0</td><td>—</td><td class="nota-med">5,75</td><td>85%</td><td><span class="chip cursando">CURSANDO</span></td></tr>
+              <tr><td>Sistemas Operacionais</td><td>9,0</td><td>9,5</td><td>—</td><td class="nota-ok">9,25</td><td>95%</td><td><span class="chip aprovado">APROVADO</span></td></tr>
+              <tr><td>Programação Funcional</td><td>8,0</td><td>—</td><td>—</td><td class="nota-ok">8,0</td><td>90%</td><td><span class="chip cursando">CURSANDO</span></td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ░░ PERFIL ░░ -->
+      <div id="pg-perfil" class="section-page">
+        <div class="profile-hero">
+          <div class="profile-avatar-big">R</div>
+          <div class="profile-info">
+            <h2>Rafael Antunes da Silva</h2>
+            <p>Engenharia de Software · Graduação · Bacharelado</p>
+            <div class="profile-badges">
+              <span class="pbadge gold">⭐ IEA 8,4</span>
+              <span class="pbadge">ATIVO</span>
+              <span class="pbadge">3º Ano</span>
+              <span class="pbadge">Noturno</span>
+            </div>
+          </div>
+        </div>
+        <div class="two-col">
+          <div class="panel">
+            <div class="panel-header">👤 Dados Pessoais</div>
+            <div class="panel-body">
+              <table class="tbl">
+                <tr><td><strong>Nome Completo</strong></td><td>Rafael Antunes da Silva</td></tr>
+                <tr><td><strong>RA</strong></td><td>202103456</td></tr>
+                <tr><td><strong>CPF</strong></td><td>430.828.108-37</td></tr>
+                <tr><td><strong>RG</strong></td><td>48.923.104-5 SSP/SP</td></tr>
+                <tr><td><strong>Nascimento</strong></td><td>03/05/2001</td></tr>
+                <tr><td><strong>Sexo</strong></td><td>Masculino</td></tr>
+                <tr><td><strong>Naturalidade</strong></td><td>Ribeirão Preto – SP</td></tr>
+                <tr><td><strong>Nacionalidade</strong></td><td>Brasileiro</td></tr>
+              </table>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-header">📞 Contato & Endereço</div>
+            <div class="panel-body">
+              <table class="tbl">
+                <tr><td><strong>E-mail Institucional</strong></td><td>rafael.antunes@edu.unaerp.br</td></tr>
+                <tr><td><strong>E-mail Pessoal</strong></td><td>rafaelantunes@email.com</td></tr>
+                <tr><td><strong>Telefone</strong></td><td>(16) 99876-5432</td></tr>
+                <tr><td><strong>CEP</strong></td><td>14090-000</td></tr>
+                <tr><td><strong>Endereço</strong></td><td>Rua das Flores, 123 – Centro</td></tr>
+                <tr><td><strong>Cidade</strong></td><td>Ribeirão Preto – SP</td></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-header">🎓 Dados Acadêmicos</div>
+          <div class="panel-body">
+            <div class="three-col">
+              <table class="tbl">
+                <tr><td><strong>Curso</strong></td><td>Engenharia de Software</td></tr>
+                <tr><td><strong>Grau</strong></td><td>Bacharelado</td></tr>
+                <tr><td><strong>Turno</strong></td><td>Noturno</td></tr>
+                <tr><td><strong>Campus</strong></td><td>Ribeirão Preto</td></tr>
+              </table>
+              <table class="tbl">
+                <tr><td><strong>Período Atual</strong></td><td>5º Período (3º Ano)</td></tr>
+                <tr><td><strong>Ingresso</strong></td><td>2021.1 (Vestibular)</td></tr>
+                <tr><td><strong>Previsão Conclusão</strong></td><td>2025.2</td></tr>
+                <tr><td><strong>Situação</strong></td><td><span class="chip ativo">ATIVO</span></td></tr>
+              </table>
+              <table class="tbl">
+                <tr><td><strong>IEA (IRA)</strong></td><td class="nota-ok">8,4</td></tr>
+                <tr><td><strong>Créditos Cursados</strong></td><td>142 / 200</td></tr>
+                <tr><td><strong>CH Cursada</strong></td><td>2.130h / 3.000h</td></tr>
+                <tr><td><strong>Reprovações</strong></td><td>0</td></tr>
+              </table>
+            </div>
+            <div style="margin-top:16px;">
+              <p style="font-size:.78rem;color:#888;margin-bottom:6px;">Progresso do Curso</p>
+              <div class="prog-bar"><div class="prog-fill verde" style="width:71%"></div></div>
+              <p style="font-size:.72rem;color:#888;margin-top:4px;">71% concluído · 142 de 200 créditos</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ░░ AVISOS ░░ -->
+      <div id="pg-avisos" class="section-page">
+        <div class="panel">
+          <div class="panel-header">🔔 Central de Avisos e Comunicados</div>
+          <div class="panel-body">
+            <div class="aviso-item">
+              <div class="aviso-icon urgente">⚠️</div>
+              <div>
+                <div class="aviso-title">⚠️ URGENTE — Prazo de Rematrícula 2025.2</div>
+                <div class="aviso-desc">A rematrícula para o semestre 2025.2 estará disponível de 01/07 a 15/07/2025. Alunos com pendências financeiras devem regularizar até 25/06/2025. Acesse Financeiro > Boletos para verificar.</div>
+                <div class="aviso-date">📅 17/03/2025 · Secretaria Acadêmica</div>
+              </div>
+            </div>
+            <div class="aviso-item">
+              <div class="aviso-icon info">📢</div>
+              <div>
+                <div class="aviso-title">Semana Acadêmica de Engenharia — SEAUNAERP 2025</div>
+                <div class="aviso-desc">A SEAUNAERP acontece de 20 a 24 de abril. Palestras, workshops e visitas técnicas. Inscrições pelo link no AVA. Participação válida como Atividade Complementar (20h).</div>
+                <div class="aviso-date">📅 14/03/2025 · Coordenação de Engenharia</div>
+              </div>
+            </div>
+            <div class="aviso-item">
+              <div class="aviso-icon ok">✅</div>
+              <div>
+                <div class="aviso-title">Notas da N2 Disponíveis — Prazo de Revisão até 20/03</div>
+                <div class="aviso-desc">As notas da 2ª Avaliação foram lançadas. Caso haja divergência, solicite revisão via Requerimento Online até 20/03/2025. Após este prazo, as notas serão homologadas.</div>
+                <div class="aviso-date">📅 12/03/2025 · Prof. Coordenador</div>
+              </div>
+            </div>
+            <div class="aviso-item">
+              <div class="aviso-icon info">📚</div>
+              <div>
+                <div class="aviso-title">Renovação do Acervo — Biblioteca Central</div>
+                <div class="aviso-desc">Novos títulos de Engenharia de Software e Ciência de Dados adicionados ao acervo físico e digital. Acesse o Portal Minha Biblioteca pelo AVA para e-books.</div>
+                <div class="aviso-date">📅 08/03/2025 · Biblioteca UNAERP</div>
+              </div>
+            </div>
+            <div class="aviso-item">
+              <div class="aviso-icon info">🏆</div>
+              <div>
+                <div class="aviso-title">Programa de Iniciação Científica — PIBIC 2025</div>
+                <div class="aviso-desc">Abertas inscrições para o Programa de Iniciação Científica. Bolsas CNPq e FAPESP disponíveis. Acesse o edital completo no site da UNAERP. Prazo: 31/03/2025.</div>
+                <div class="aviso-date">📅 05/03/2025 · Pesquisa e Extensão</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ░░ NOTAS ░░ -->
+      <div id="pg-notas" class="section-page">
+        <div class="panel" style="margin-bottom:18px;">
+          <div class="panel-header">📊 Notas e Frequência — 2025.1</div>
+          <div class="panel-body" style="overflow-x:auto;">
+            <table class="tbl">
+              <tr><th>Disciplina</th><th>Carga H.</th><th>Prof.</th><th>N1</th><th>N2</th><th>N3</th><th>Média</th><th>Faltas</th><th>Freq.</th><th>Situação</th></tr>
+              <tr>
+                <td>Engenharia de Software II</td><td>68h</td><td>Dr. Carlos Mota</td>
+                <td>8,5</td><td>9,0</td><td>—</td><td class="nota-ok">8,75</td>
+                <td>4</td><td>88%</td><td><span class="chip aprovado">APROVADO</span></td>
+              </tr>
+              <tr>
+                <td>Banco de Dados II</td><td>68h</td><td>Dra. Patrícia Lima</td>
+                <td>7,5</td><td>8,0</td><td>—</td><td class="nota-ok">7,75</td>
+                <td>3</td><td>92%</td><td><span class="chip aprovado">APROVADO</span></td>
+              </tr>
+              <tr>
+                <td>Redes de Computadores</td><td>51h</td><td>Me. João Prado</td>
+                <td>6,0</td><td>7,5</td><td>—</td><td class="nota-med">6,75</td>
+                <td>7</td><td>78%</td><td><span class="chip cursando">CURSANDO</span></td>
+              </tr>
+              <tr>
+                <td>Cálculo II</td><td>85h</td><td>Dr. Fernando Souza</td>
+                <td>5,5</td><td>6,0</td><td>—</td><td class="nota-med">5,75</td>
+                <td>6</td><td>85%</td><td><span class="chip cursando">CURSANDO</span></td>
+              </tr>
+              <tr>
+                <td>Sistemas Operacionais</td><td>68h</td><td>Me. Ana Costa</td>
+                <td>9,0</td><td>9,5</td><td>—</td><td class="nota-ok">9,25</td>
+                <td>2</td><td>95%</td><td><span class="chip aprovado">APROVADO</span></td>
+              </tr>
+              <tr>
+                <td>Programação Funcional</td><td>51h</td><td>Dr. Marcos Alves</td>
+                <td>8,0</td><td>—</td><td>—</td><td class="nota-ok">8,0</td>
+                <td>4</td><td>90%</td><td><span class="chip cursando">CURSANDO</span></td>
+              </tr>
+            </table>
+          </div>
+        </div>
+        <div class="two-col">
+          <div class="panel">
+            <div class="panel-header">📈 Histórico de Médias por Semestre</div>
+            <div class="panel-body">
+              <table class="tbl">
+                <tr><th>Semestre</th><th>IEA</th><th>Situação</th></tr>
+                <tr><td>2021.1</td><td class="nota-ok">7,8</td><td><span class="chip aprovado">Concluído</span></td></tr>
+                <tr><td>2021.2</td><td class="nota-ok">8,1</td><td><span class="chip aprovado">Concluído</span></td></tr>
+                <tr><td>2022.1</td><td class="nota-ok">7,5</td><td><span class="chip aprovado">Concluído</span></td></tr>
+                <tr><td>2022.2</td><td class="nota-ok">8,4</td><td><span class="chip aprovado">Concluído</span></td></tr>
+                <tr><td>2025.1</td><td class="nota-ok">8,4</td><td><span class="chip cursando">Em andamento</span></td></tr>
+              </table>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-header">⚠️ Atenção — Frequência</div>
+            <div class="panel-body">
+              <p style="font-size:.82rem;color:#666;margin-bottom:12px;">Limite mínimo de frequência: <strong>75%</strong>. Disciplinas em risco:</p>
+              <div style="margin-bottom:12px;">
+                <div style="display:flex;justify-content:space-between;font-size:.8rem;margin-bottom:4px;"><span>Redes de Computadores</span><span class="nota-med">78%</span></div>
+                <div class="prog-bar"><div class="prog-fill amarelo" style="width:78%"></div></div>
+              </div>
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:.8rem;margin-bottom:4px;"><span>Sistemas Operacionais</span><span class="nota-ok">95%</span></div>
+                <div class="prog-bar"><div class="prog-fill verde" style="width:95%"></div></div>
+              </div>
+              <p style="font-size:.72rem;color:#aaa;margin-top:12px;">📌 Redes está próxima do mínimo. Evite faltas!</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ░░ HORÁRIO ░░ -->
+      <div id="pg-horario" class="section-page">
+        <div class="panel">
+          <div class="panel-header">📅 Grade Horária — 2025.1 (Noturno)</div>
+          <div class="panel-body" style="overflow-x:auto;">
+            <div class="hg" style="margin-bottom:16px;">
+              <div class="hgh">Horário</div>
+              <div class="hgh">Segunda</div>
+              <div class="hgh">Terça</div>
+              <div class="hgh">Quarta</div>
+              <div class="hgh">Quinta</div>
+              <div class="hgh">Sexta</div>
+
+              <div class="hgt">19:00<br/>20:40</div>
+              <div class="hgc"><strong>Eng. Software II</strong><span>Lab 3 – Dr. Mota</span></div>
+              <div class="hgc"><strong>Redes</strong><span>Sala 204 – Me. Prado</span></div>
+              <div class="hge"></div>
+              <div class="hgc"><strong>Banco de Dados II</strong><span>Sala 102 – Dra. Lima</span></div>
+              <div class="hge"></div>
+
+              <div class="hgt">20:50<br/>22:30</div>
+              <div class="hgc"><strong>Sist. Operacionais</strong><span>Lab 1 – Me. Costa</span></div>
+              <div class="hge"></div>
+              <div class="hgc"><strong>Cálculo II</strong><span>Sala 301 – Dr. Souza</span></div>
+              <div class="hgc"><strong>Prog. Funcional</strong><span>Lab 2 – Dr. Alves</span></div>
+              <div class="hgc"><strong>Eng. Software II</strong><span>Sala 205 – Dr. Mota</span></div>
+            </div>
+            <div class="chips">
+              <div class="chip-info">⏰ Portões: <strong>18h45</strong></div>
+              <div class="chip-info">🏛 Bloco B (Exatas)</div>
+              <div class="chip-info">6 disciplinas · 391h/sem</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ░░ CALENDÁRIO ░░ -->
+      <div id="pg-calendario" class="section-page">
+        <div class="panel">
+          <div class="panel-header">🗓 Calendário Acadêmico — Março 2025</div>
+          <div class="panel-body">
+            <div class="cal-grid">
+              <div class="cal-day-header">DOM</div><div class="cal-day-header">SEG</div><div class="cal-day-header">TER</div><div class="cal-day-header">QUA</div><div class="cal-day-header">QUI</div><div class="cal-day-header">SEX</div><div class="cal-day-header">SÁB</div>
+              <div class="cal-day other">23</div><div class="cal-day other">24</div><div class="cal-day other">25</div><div class="cal-day other">26</div><div class="cal-day other">27</div><div class="cal-day other">28</div>
+              <div class="cal-day">1</div><div class="cal-day">2</div><div class="cal-day">3</div><div class="cal-day">4</div><div class="cal-day">5</div><div class="cal-day">6</div><div class="cal-day">7</div><div class="cal-day">8</div>
+              <div class="cal-day">9</div><div class="cal-day">10</div><div class="cal-day">11</div><div class="cal-day">12</div><div class="cal-day">13</div><div class="cal-day event" title="Prazo revisão N2">14</div><div class="cal-day">15</div>
+              <div class="cal-day">16</div><div class="cal-day today">17</div><div class="cal-day">18</div><div class="cal-day">19</div><div class="cal-day prova" title="N3 Cálculo II">20</div><div class="cal-day">21</div><div class="cal-day">22</div>
+              <div class="cal-day prova" title="N3 Redes">23</div><div class="cal-day">24</div><div class="cal-day prova" title="N3 Prog. Funcional">25</div><div class="cal-day">26</div><div class="cal-day">27</div><div class="cal-day event" title="SEAUNAERP">28</div><div class="cal-day">29</div>
+              <div class="cal-day event" title="Entrega TCC">30</div><div class="cal-day event">31</div><div class="cal-day other">1</div><div class="cal-day other">2</div><div class="cal-day other">3</div><div class="cal-day other">4</div><div class="cal-day other">5</div>
+            </div>
+            <div class="cal-legend">
+              <div class="cal-legend-item"><div class="cal-dot" style="background:var(--azul)"></div> Hoje</div>
+              <div class="cal-legend-item"><div class="cal-dot" style="background:#c0392b"></div> Avaliação/Prova</div>
+              <div class="cal-legend-item"><div class="cal-dot" style="background:#c07000"></div> Evento/Prazo</div>
+            </div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-header">📋 Eventos do Semestre 2025.1</div>
+          <div class="panel-body" style="overflow-x:auto;">
+            <table class="tbl">
+              <tr><th>Data</th><th>Evento</th><th>Tipo</th></tr>
+              <tr><td>03/03/2025</td><td>Início do Semestre 2025.1</td><td><span class="chip cursando">Acadêmico</span></td></tr>
+              <tr><td>20/03/2025</td><td>N3 — Cálculo II</td><td><span class="chip vencido">Avaliação</span></td></tr>
+              <tr><td>22/03/2025</td><td>N3 — Redes de Computadores</td><td><span class="chip vencido">Avaliação</span></td></tr>
+              <tr><td>20–24/04/2025</td><td>SEAUNAERP 2025</td><td><span class="chip pendente">Evento</span></td></tr>
+              <tr><td>15/05/2025</td><td>Exames Finais — início</td><td><span class="chip vencido">Avaliação</span></td></tr>
+              <tr><td>30/06/2025</td><td>Prazo rematrícula 2025.2</td><td><span class="chip pendente">Prazo</span></td></tr>
+              <tr><td>Jul/2025</td><td>Férias / Recesso Acadêmico</td><td><span class="chip cursando">Férias</span></td></tr>
+              <tr><td>04/08/2025</td><td>Início do Semestre 2025.2</td><td><span class="chip cursando">Acadêmico</span></td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ░░ HISTÓRICO ░░ -->
+      <div id="pg-historico" class="section-page">
+        <div class="panel">
+          <div class="panel-header">📜 Histórico Escolar — Rafael Antunes da Silva</div>
+          <div class="panel-body" style="overflow-x:auto;">
+            <p style="font-size:.8rem;color:#888;margin-bottom:14px;">RA: 202103456 · Engenharia de Software · IEA Geral: 8,4</p>
+            <table class="tbl">
+              <tr><th>Semestre</th><th>Disciplina</th><th>CH</th><th>Média</th><th>Freq.</th><th>Situação</th><th>Créditos</th></tr>
+              <tr><td rowspan="5" style="vertical-align:top;padding-top:12px;font-weight:600;color:var(--azul);">2021.1</td>
+                <td>Algoritmos e Programação I</td><td>68h</td><td class="nota-ok">8,5</td><td>90%</td><td><span class="chip aprovado">APROVADO</span></td><td>4</td></tr>
+              <tr><td>Cálculo I</td><td>85h</td><td class="nota-med">6,0</td><td>88%</td><td><span class="chip aprovado">APROVADO</span></td><td>5</td></tr>
+              <tr><td>Álgebra Linear</td><td>51h</td><td class="nota-ok">7,5</td><td>92%</td><td><span class="chip aprovado">APROVADO</span></td><td>3</td></tr>
+              <tr><td>Lógica Matemática</td><td>51h</td><td class="nota-ok">9,0</td><td>95%</td><td><span class="chip aprovado">APROVADO</span></td><td>3</td></tr>
+              <tr><td>Metodologia Científica</td><td>34h</td><td class="nota-ok">8,0</td><td>94%</td><td><span class="chip aprovado">APROVADO</span></td><td>2</td></tr>
+              <tr><td colspan="7" style="background:var(--cinza);font-size:.72rem;color:#888;padding:6px 10px;">Total 2021.1 · IEA: 7,8 · 17 créditos</td></tr>
+
+              <tr><td rowspan="5" style="vertical-align:top;padding-top:12px;font-weight:600;color:var(--azul);">2021.2</td>
+                <td>Algoritmos e Programação II</td><td>68h</td><td class="nota-ok">9,0</td><td>93%</td><td><span class="chip aprovado">APROVADO</span></td><td>4</td></tr>
+              <tr><td>Estrutura de Dados</td><td>68h</td><td class="nota-ok">8,5</td><td>91%</td><td><span class="chip aprovado">APROVADO</span></td><td>4</td></tr>
+              <tr><td>Cálculo II</td><td>85h</td><td class="nota-med">6,5</td><td>86%</td><td><span class="chip aprovado">APROVADO</span></td><td>5</td></tr>
+              <tr><td>Teoria da Computação</td><td>51h</td><td class="nota-ok">8,0</td><td>90%</td><td><span class="chip aprovado">APROVADO</span></td><td>3</td></tr>
+              <tr><td>Banco de Dados I</td><td>68h</td><td class="nota-ok">8,5</td><td>88%</td><td><span class="chip aprovado">APROVADO</span></td><td>4</td></tr>
+              <tr><td colspan="7" style="background:var(--cinza);font-size:.72rem;color:#888;padding:6px 10px;">Total 2021.2 · IEA: 8,1 · 20 créditos</td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ░░ TCC ░░ -->
+      <div id="pg-tcc" class="section-page">
+        <div class="two-col">
+          <div class="panel">
+            <div class="panel-header">🎓 TCC — Trabalho de Conclusão de Curso</div>
+            <div class="panel-body">
+              <table class="tbl">
+                <tr><td><strong>Fase</strong></td><td><span class="chip cursando">PROPOSTA</span></td></tr>
+                <tr><td><strong>Título Provisório</strong></td><td>Microsserviços em Arquitetura Serverless</td></tr>
+                <tr><td><strong>Orientador</strong></td><td>Dr. Carlos Mota</td></tr>
+                <tr><td><strong>Área</strong></td><td>Engenharia de Software</td></tr>
+                <tr><td><strong>Prazo Proposta</strong></td><td>31/03/2025</td></tr>
+                <tr><td><strong>Prazo Entrega Final</strong></td><td>Out/2025</td></tr>
+                <tr><td><strong>Banca Prevista</strong></td><td>Nov/2025</td></tr>
+              </table>
+              <div style="margin-top:14px;">
+                <p style="font-size:.78rem;color:#888;margin-bottom:6px;">Progresso Geral</p>
+                <div class="prog-bar"><div class="prog-fill amarelo" style="width:15%"></div></div>
+                <p style="font-size:.72rem;color:#aaa;margin-top:4px;">15% — Proposta em elaboração</p>
+              </div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-header">💼 Estágio Curricular</div>
+            <div class="panel-body">
+              <table class="tbl">
+                <tr><td><strong>Estágio Curricular I</strong></td><td><span class="chip pendente">Não iniciado</span></td></tr>
+                <tr><td><strong>Estágio Curricular II</strong></td><td><span class="chip pendente">Não iniciado</span></td></tr>
+                <tr><td><strong>CH Total Obrigatória</strong></td><td>400h</td></tr>
+                <tr><td><strong>Início Previsto</strong></td><td>2025.2 (4º Ano)</td></tr>
+                <tr><td><strong>Supervisor</strong></td><td>A definir</td></tr>
+              </table>
+              <div style="margin-top:14px;padding:12px;background:#fff3e0;border-radius:8px;border-left:3px solid var(--amarelo);">
+                <p style="font-size:.78rem;color:var(--laranja);font-weight:600;">⏰ Prazo para início: 2025.2</p>
+                <p style="font-size:.73rem;color:#888;margin-top:4px;">Acesse Requerimentos > Estágio para protocolar o plano de estágio.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-header">📋 Atividades Complementares</div>
+          <div class="panel-body">
+            <div style="margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;">
+              <span style="font-size:.82rem;color:#555;">Horas cursadas: <strong>120h / 200h obrigatórias</strong></span>
+              <span class="chip cursando">60% concluído</span>
+            </div>
+            <div class="prog-bar"><div class="prog-fill" style="width:60%"></div></div>
+            <table class="tbl" style="margin-top:16px;">
+              <tr><th>Atividade</th><th>CH</th><th>Data</th><th>Situação</th></tr>
+              <tr><td>Hackathon UNAERP 2022</td><td>16h</td><td>Out/2022</td><td><span class="chip aprovado">APROVADO</span></td></tr>
+              <tr><td>Minicurso Python para Data Science</td><td>20h</td><td>Jun/2023</td><td><span class="chip aprovado">APROVADO</span></td></tr>
+              <tr><td>Monitoria — Algoritmos I</td><td>40h</td><td>2023.1</td><td><span class="chip aprovado">APROVADO</span></td></tr>
+              <tr><td>Palestra — DevOps na Prática</td><td>4h</td><td>Ago/2023</td><td><span class="chip aprovado">APROVADO</span></td></tr>
+              <tr><td>Workshop Unity — Game Dev</td><td>16h</td><td>Nov/2023</td><td><span class="chip aprovado">APROVADO</span></td></tr>
+              <tr><td>SEAUNAERP 2025 (previsto)</td><td>20h</td><td>Abr/2025</td><td><span class="chip pendente">PENDENTE</span></td></tr>
+              <tr><td>Certificação AWS Cloud (previsto)</td><td>—</td><td>—</td><td><span class="chip pendente">EM ANÁLISE</span></td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ░░ FINANCEIRO ░░ -->
+      <div id="pg-financeiro" class="section-page">
+        <div class="fin-resumo">
+          <div class="fin-card azul">
+            <p>Mensalidade</p>
+            <h3>R$ 1.450</h3>
+            <small>Valor mensal 2025</small>
+          </div>
+          <div class="fin-card verde">
+            <p>Pagamentos em Dia</p>
+            <h3>5 / 6</h3>
+            <small>Jan a Mai 2025 pagos</small>
+          </div>
+          <div class="fin-card vermelho">
+            <p>Pendente</p>
+            <h3>R$ 1.450</h3>
+            <small>Jun/2025 · vence 10/06</small>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-header">💳 Boletos 2025</div>
+          <div class="panel-body" style="overflow-x:auto;">
+            <table class="tbl">
+              <tr><th>Mês</th><th>Vencimento</th><th>Valor</th><th>Desconto</th><th>Valor Final</th><th>Pago em</th><th>Situação</th><th>Ação</th></tr>
+              <tr><td>Jan/2025</td><td>10/01</td><td>R$ 1.450,00</td><td>—</td><td>R$ 1.450,00</td><td>08/01</td><td><span class="chip pago">PAGO</span></td><td><a href="#" style="color:var(--azul);font-size:.78rem;">2ª via</a></td></tr>
+              <tr><td>Fev/2025</td><td>10/02</td><td>R$ 1.450,00</td><td>—</td><td>R$ 1.450,00</td><td>09/02</td><td><span class="chip pago">PAGO</span></td><td><a href="#" style="color:var(--azul);font-size:.78rem;">2ª via</a></td></tr>
+              <tr><td>Mar/2025</td><td>10/03</td><td>R$ 1.450,00</td><td>—</td><td>R$ 1.450,00</td><td>07/03</td><td><span class="chip pago">PAGO</span></td><td><a href="#" style="color:var(--azul);font-size:.78rem;">2ª via</a></td></tr>
+              <tr><td>Abr/2025</td><td>10/04</td><td>R$ 1.450,00</td><td>—</td><td>R$ 1.450,00</td><td>10/04</td><td><span class="chip pago">PAGO</span></td><td><a href="#" style="color:var(--azul);font-size:.78rem;">2ª via</a></td></tr>
+              <tr><td>Mai/2025</td><td>10/05</td><td>R$ 1.450,00</td><td>—</td><td>R$ 1.450,00</td><td>09/05</td><td><span class="chip pago">PAGO</span></td><td><a href="#" style="color:var(--azul);font-size:.78rem;">2ª via</a></td></tr>
+              <tr style="background:#fff8f8;"><td>Jun/2025</td><td>10/06</td><td>R$ 1.450,00</td><td>—</td><td>R$ 1.450,00</td><td>—</td><td><span class="chip pendente">PENDENTE</span></td><td><a href="#" style="color:var(--azul);font-size:.78rem;font-weight:700;">📄 Pagar</a></td></tr>
+            </table>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-header">📊 Situação do Contrato</div>
+          <div class="panel-body">
+            <table class="tbl">
+              <tr><td><strong>Tipo de Contrato</strong></td><td>Mensalidade Integral</td></tr>
+              <tr><td><strong>Desconto</strong></td><td>Nenhum (bolsa: não)</td></tr>
+              <tr><td><strong>Situação Financeira</strong></td><td><span class="chip ativo">REGULAR</span></td></tr>
+              <tr><td><strong>Forma de Pagamento</strong></td><td>Boleto Bancário</td></tr>
+              <tr><td><strong>Banco</strong></td><td>Itaú — Ag. 0001 / CC: ****789</td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ░░ DOCUMENTOS ░░ -->
+      <div id="pg-documentos" class="section-page">
+        <div class="panel">
+          <div class="panel-header">📄 Emissão de Documentos Acadêmicos</div>
+          <div class="panel-body">
+            <table class="tbl">
+              <tr><th>Documento</th><th>Descrição</th><th>Disponibilidade</th><th>Formato</th><th>Ação</th></tr>
+              <tr>
+                <td><strong>Comprovante de Matrícula</strong></td>
+                <td>Comprova vínculo ativo — 2025.1</td>
+                <td><span class="chip pago">Disponível</span></td>
+                <td>PDF / A4</td>
+                <td><a href="#" style="color:var(--azul);">🖨 Emitir</a></td>
+              </tr>
+              <tr>
+                <td><strong>Declaração de Vínculo</strong></td>
+                <td>Para Carteirinha Estudantil / Meia</td>
+                <td><span class="chip pago">Disponível</span></td>
+                <td>PDF / A4</td>
+                <td><a href="#" style="color:var(--azul);">🖨 Emitir</a></td>
+              </tr>
+              <tr>
+                <td><strong>Histórico Escolar Parcial</strong></td>
+                <td>Notas e disciplinas cursadas</td>
+                <td><span class="chip pago">Disponível</span></td>
+                <td>PDF / A4</td>
+                <td><a href="#" style="color:var(--azul);">🖨 Emitir</a></td>
+              </tr>
+              <tr>
+                <td><strong>Atestado de Frequência</strong></td>
+                <td>Frequência por disciplina</td>
+                <td><span class="chip pago">Disponível</span></td>
+                <td>PDF / A4</td>
+                <td><a href="#" style="color:var(--azul);">🖨 Emitir</a></td>
+              </tr>
+              <tr>
+                <td><strong>Atestado de Conclusão</strong></td>
+                <td>Emitido após integralização</td>
+                <td><span class="chip pendente">Indisponível</span></td>
+                <td>PDF</td>
+                <td style="color:#ccc;">🔒 Bloqueado</td>
+              </tr>
+              <tr>
+                <td><strong>Diploma Digital</strong></td>
+                <td>Certificado com QR Code</td>
+                <td><span class="chip pendente">Indisponível</span></td>
+                <td>PDF / Digital</td>
+                <td style="color:#ccc;">🔒 Bloqueado</td>
+              </tr>
+              <tr>
+                <td><strong>Carteirinha Estudantil Digital</strong></td>
+                <td>Meia-entrada, descontos</td>
+                <td><span class="chip pago">Disponível</span></td>
+                <td>PDF / App</td>
+                <td><a href="#" style="color:var(--azul);">📱 Baixar</a></td>
+              </tr>
+            </table>
+            <div style="margin-top:14px;padding:12px;background:#e8edf8;border-radius:8px;font-size:.78rem;color:#555;">
+              ℹ️ Documentos com autenticação eletrônica têm validade de <strong>90 dias</strong>. Verifique o QR Code de autenticidade.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ░░ REQUERIMENTOS ░░ -->
+      <div id="pg-requerimentos" class="section-page">
+        <div class="panel" style="margin-bottom:18px;">
+          <div class="panel-header">📝 Novo Requerimento Online</div>
+          <div class="panel-body">
+            <div class="req-grid">
+              <div class="req-card"><div class="req-ico">📋</div><p>Revisão de Nota</p><small>Solicitar revisão de avaliação</small></div>
+              <div class="req-card"><div class="req-ico">⏸</div><p>Trancamento de Disciplina</p><small>Trancar disciplina do semestre</small></div>
+              <div class="req-card"><div class="req-ico">🔄</div><p>Trancamento de Matrícula</p><small>Trancamento geral do semestre</small></div>
+              <div class="req-card"><div class="req-ico">🏥</div><p>Abono de Faltas</p><small>Médico, trabalho, militar</small></div>
+              <div class="req-card"><div class="req-ico">🔁</div><p>Aproveitamento de Disciplina</p><small>De outra instituição</small></div>
+              <div class="req-card"><div class="req-ico">📄</div><p>Emissão de Documento</p><small>Declarações e certidões</small></div>
+              <div class="req-card"><div class="req-ico">🎓</div><p>Colação de Grau</p><small>Solicitação de formatura</small></div>
+              <div class="req-card"><div class="req-ico">💼</div><p>Estágio</p><small>Protocolar plano de estágio</small></div>
+              <div class="req-card"><div class="req-ico">🔀</div><p>Transferência Interna</p><small>Mudar de curso ou turno</small></div>
+              <div class="req-card"><div class="req-ico">📆</div><p>2ª Chamada de Avaliação</p><small>Prova perdida por motivo justo</small></div>
+              <div class="req-card"><div class="req-ico">🔡</div><p>Outros Requerimentos</p><small>Demais solicitações</small></div>
+            </div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-header">📋 Meus Requerimentos</div>
+          <div class="panel-body" style="overflow-x:auto;">
+            <table class="tbl">
+              <tr><th>Protocolo</th><th>Tipo</th><th>Data</th><th>Status</th><th>Resposta</th></tr>
+              <tr>
+                <td><strong>#25-00231</strong></td><td>Revisão de Nota — Cálculo II</td><td>05/03/2025</td>
+                <td><span class="chip pago">DEFERIDO</span></td>
+                <td style="font-size:.78rem;">Nota mantida. Ver justificativa.</td>
+              </tr>
+              <tr>
+                <td><strong>#24-01887</strong></td><td>Abono de Faltas — Médico</td><td>20/11/2024</td>
+                <td><span class="chip pago">DEFERIDO</span></td>
+                <td style="font-size:.78rem;">3 faltas abonadas — Eng. Software I.</td>
+              </tr>
+            </table>
+            <p style="font-size:.75rem;color:#aaa;margin-top:12px;">Prazo de resposta: até 10 dias úteis.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ░░ BIBLIOTECA ░░ -->
+      <div id="pg-biblioteca" class="section-page">
+        <div class="panel" style="margin-bottom:18px;">
+          <div class="panel-header">📚 Empréstimos Ativos</div>
+          <div class="panel-body" style="overflow-x:auto;">
+            <table class="tbl">
+              <tr><th>Título</th><th>Autor</th><th>Tombo</th><th>Retirada</th><th>Devolução</th><th>Situação</th></tr>
+              <tr><td>Engenharia de Software (10ª ed.)</td><td>Ian Sommerville</td><td>BK-4821</td><td>10/03/2025</td><td>25/03/2025</td><td><span class="chip pendente">Em posse</span></td></tr>
+              <tr><td>Clean Code</td><td>Robert C. Martin</td><td>BK-3302</td><td>02/03/2025</td><td>17/03/2025</td><td><span class="chip vencido">VENCIDO</span></td></tr>
+            </table>
+            <div style="margin-top:12px;padding:10px;background:#fdecea;border-radius:8px;font-size:.78rem;color:var(--vermelho);">
+              ⚠️ <strong>Clean Code</strong> está com devolução atrasada desde 17/03. Multa: R$ 0,50/dia. Devolva para evitar bloqueio de novos empréstimos.
+            </div>
+          </div>
+        </div>
+        <div class="two-col">
+          <div class="panel">
+            <div class="panel-header">🔍 Buscar no Acervo</div>
+            <div class="panel-body">
+              <div class="fg">
+                <input type="text" placeholder="Título, autor ou assunto..." style="width:100%;padding:10px 14px;border:1.5px solid var(--borda);border-radius:8px;font-size:.9rem;outline:none;"/>
+              </div>
+              <button class="btn-primary" style="margin-top:8px;">🔍 Pesquisar</button>
+              <p style="font-size:.72rem;color:#aaa;margin-top:10px;">Acervo com 45.000 títulos · Também disponível no AVA: Minha Biblioteca Digital</p>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-header">📊 Meu Histórico</div>
+            <div class="panel-body">
+              <table class="tbl">
+                <tr><td><strong>Empréstimos realizados</strong></td><td>24</td></tr>
+                <tr><td><strong>Devoluções no prazo</strong></td><td>22</td></tr>
+                <tr><td><strong>Multas pagas</strong></td><td>R$ 1,50</td></tr>
+                <tr><td><strong>Multa atual</strong></td><td style="color:var(--vermelho);">R$ 0,50 (1 dia)</td></tr>
+                <tr><td><strong>Reservas ativas</strong></td><td>0</td></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ░░ OUVIDORIA ░░ -->
+      <div id="pg-ouvidoria" class="section-page">
+        <div class="two-col">
+          <div class="panel">
+            <div class="panel-header">💬 Nova Manifestação</div>
+            <div class="panel-body">
+              <div class="fg"><label>Tipo</label>
+                <select style="width:100%;padding:10px 14px;border:1.5px solid var(--borda);border-radius:8px;font-size:.9rem;outline:none;background:#fafbff;">
+                  <option>Reclamação</option>
+                  <option>Sugestão</option>
+                  <option>Elogio</option>
+                  <option>Denúncia</option>
+                  <option>Solicitação de Informação</option>
+                </select>
+              </div>
+              <div class="fg"><label>Assunto</label>
+                <input type="text" placeholder="Descreva brevemente o assunto" style="width:100%;padding:10px 14px;border:1.5px solid var(--borda);border-radius:8px;font-size:.9rem;outline:none;"/>
+              </div>
+              <div class="fg"><label>Descrição</label>
+                <textarea rows="4" placeholder="Detalhe sua manifestação..." style="width:100%;padding:10px 14px;border:1.5px solid var(--borda);border-radius:8px;font-size:.9rem;outline:none;resize:vertical;"></textarea>
+              </div>
+              <div class="fg" style="display:flex;align-items:center;gap:8px;">
+                <input type="checkbox" id="anonimo"/>
+                <label for="anonimo" style="font-size:.82rem;color:#555;margin:0;">Manifestação anônima</label>
+              </div>
+              <button class="btn-primary">📨 Enviar Manifestação</button>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-header">📋 Minhas Manifestações</div>
+            <div class="panel-body">
+              <table class="tbl">
+                <tr><th>Protocolo</th><th>Tipo</th><th>Data</th><th>Status</th></tr>
+                <tr><td>#OUV-25-0041</td><td>Sugestão</td><td>10/02/2025</td><td><span class="chip pago">RESPONDIDO</span></td></tr>
+              </table>
+              <p style="font-size:.75rem;color:#aaa;margin-top:14px;">Prazo de resposta: 15 dias úteis. Você receberá e-mail ao ser respondido.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+    <footer>© 2025 UNAERP — Universidade de Ribeirão Preto · Secretaria de TI Acadêmica · <a href="https://www.unaerp.br" style="color:var(--azul);">www.unaerp.br</a></footer>
+  </div><!-- /main-area -->
+</div><!-- /portal-page -->
+
+<script>
+  function doLogin(e) {
+    e.preventDefault();
+    document.getElementById('login-page').style.display = 'none';
+    document.getElementById('portal-page').style.display = 'block';
+  }
+  function doLogout() {
+    document.getElementById('portal-page').style.display = 'none';
+    document.getElementById('login-page').style.display = 'flex';
+    document.getElementById('ra').value = '';
+    document.getElementById('senha').value = '';
+  }
+  function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('overlay').classList.toggle('open');
+  }
+  function closeSidebar() {
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('overlay').classList.remove('open');
+  }
+
+  const titles = {
+    inicio: 'Início', perfil: 'Meu Perfil', avisos: 'Avisos e Comunicados',
+    notas: 'Notas e Faltas', horario: 'Grade Horária', calendario: 'Calendário Acadêmico',
+    historico: 'Histórico Escolar', tcc: 'TCC e Estágio', financeiro: 'Financeiro',
+    documentos: 'Documentos Acadêmicos', requerimentos: 'Requerimentos Online',
+    biblioteca: 'Biblioteca', ouvidoria: 'Ouvidoria'
+  };
+
+  function nav(page) {
+    document.querySelectorAll('.section-page').forEach(p => p.classList.remove('active'));
+    document.getElementById('pg-' + page).classList.add('active');
+    document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('active'));
+    event && event.currentTarget && event.currentTarget.classList.add('active');
+    document.getElementById('topbar-title').textContent = titles[page] || page;
+    closeSidebar();
+    window.scrollTo(0, 0);
+  }
+</script>
+</body>
+</html>
