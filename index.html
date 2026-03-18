@@ -805,117 +805,78 @@
 
         <!-- ░░ CARTEIRINHA ░░ -->
         <div id="pg-carteirinha" class="sp">
-          <div style="max-width:480px;margin:0 auto;">
-            <p style="font-size:.8rem;color:#888;margin-bottom:16px;text-align:center;">Apresente esta carteirinha para obter meia-entrada e descontos estudantis.</p>
+          <div style="max-width:420px;margin:0 auto;">
+            <p style="font-size:.78rem;color:#888;margin-bottom:16px;text-align:center;">Apresente esta carteirinha para meia-entrada e descontos estudantis.</p>
 
-            <!-- CARTEIRINHA FRENTE -->
-            <div style="
-              background: linear-gradient(135deg, #1e3d7a 0%, #2a5a9e 60%, #1e3d7a 100%);
-              border-radius: 14px;
-              padding: 22px 22px 18px;
-              color: #fff;
-              box-shadow: 0 8px 32px rgba(0,0,0,.3);
-              margin-bottom: 16px;
-              position: relative;
+            <!-- CARTEIRINHA - estilo físico real -->
+            <div id="carteirinha-print" style="
+              background: #fff;
+              border: 1px solid #bbb;
+              border-radius: 6px;
               overflow: hidden;
+              box-shadow: 0 2px 10px rgba(0,0,0,.15);
+              margin-bottom: 14px;
+              font-family: Arial, sans-serif;
             ">
-              <!-- padrão fundo decorativo -->
-              <div style="position:absolute;top:-40px;right:-40px;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,.04);"></div>
-              <div style="position:absolute;bottom:-30px;left:-30px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.04);"></div>
-
-              <!-- header carteirinha -->
-              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
-                <div style="display:flex;align-items:center;gap:10px;">
-                  <img src="logo.png" alt="UNAERP" style="height:22px;filter:brightness(0) invert(1);"/>
-                </div>
-                <div style="text-align:right;">
-                  <div style="font-size:.62rem;color:rgba(255,255,255,.6);letter-spacing:1px;text-transform:uppercase;">Carteirinha Estudantil</div>
-                  <div style="font-size:.72rem;color:#f5c400;font-weight:700;">GRADUAÇÃO</div>
-                </div>
+              <!-- Faixa azul topo -->
+              <div style="background:#1e3d7a;padding:8px 12px;display:flex;align-items:center;justify-content:space-between;">
+                <img src="logo.png" alt="UNAERP" style="height:20px;filter:brightness(0) invert(1);"/>
+                <span style="color:#f5c400;font-size:.65rem;font-weight:700;letter-spacing:.5px;text-transform:uppercase;">Carteira de Estudante</span>
               </div>
 
-              <!-- corpo -->
-              <div style="display:flex;gap:16px;align-items:flex-start;">
-                <!-- foto -->
-                <div style="
-                  width: 80px; height: 100px; border-radius: 8px; overflow: hidden;
-                  border: 2px solid rgba(255,255,255,.3); flex-shrink: 0; background: #2a4a9e;
-                ">
-                  <img src="foto-rosto.jpg" alt="Rafael" style="width:100%;height:100%;object-fit:cover;object-position:top;"/>
+              <!-- Corpo principal -->
+              <div style="display:flex;gap:0;">
+                <!-- Foto lado esquerdo -->
+                <div style="width:110px;flex-shrink:0;border-right:1px solid #ddd;background:#f8f8f8;">
+                  <img src="foto-rosto.jpg" alt="Rafael Antunes"
+                    style="width:110px;height:140px;object-fit:cover;object-position:top center;display:block;"/>
+                  <div style="background:#1e3d7a;color:#fff;font-size:.58rem;text-align:center;padding:3px;font-weight:700;letter-spacing:.5px;">GRADUAÇÃO</div>
                 </div>
-                <!-- dados -->
-                <div style="flex:1;">
-                  <div style="font-size:1.1rem;font-weight:800;margin-bottom:4px;">Rafael Antunes</div>
-                  <div style="font-size:.75rem;color:rgba(255,255,255,.7);margin-bottom:8px;">Engenharia de Software</div>
-                  <table style="font-size:.72rem;border-collapse:collapse;width:100%;">
-                    <tr><td style="color:rgba(255,255,255,.55);padding-bottom:3px;width:60px;">RA:</td><td style="font-weight:700;color:#fff;">202103456</td></tr>
-                    <tr><td style="color:rgba(255,255,255,.55);padding-bottom:3px;">Período:</td><td style="font-weight:700;">5º Período · 3º Ano</td></tr>
-                    <tr><td style="color:rgba(255,255,255,.55);padding-bottom:3px;">Turno:</td><td>Noturno</td></tr>
-                    <tr><td style="color:rgba(255,255,255,.55);padding-bottom:3px;">Validade:</td><td style="color:#f5c400;font-weight:700;">31/12/2026</td></tr>
+
+                <!-- Dados lado direito -->
+                <div style="flex:1;padding:10px 12px;">
+                  <div style="font-size:.95rem;font-weight:900;color:#1e3d7a;line-height:1.2;margin-bottom:6px;">RAFAEL ANTUNES</div>
+                  <div style="font-size:.68rem;color:#555;margin-bottom:8px;line-height:1.4;">
+                    Engenharia de Software<br/>
+                    Universidade de Ribeirão Preto
+                  </div>
+                  <table style="font-size:.66rem;border-collapse:collapse;width:100%;color:#444;">
+                    <tr>
+                      <td style="color:#888;padding-bottom:3px;width:54px;">Registro:</td>
+                      <td style="font-weight:700;color:#1e3d7a;">202103456</td>
+                    </tr>
+                    <tr>
+                      <td style="color:#888;padding-bottom:3px;">Período:</td>
+                      <td>5º — Noturno</td>
+                    </tr>
+                    <tr>
+                      <td style="color:#888;padding-bottom:3px;">CPF:</td>
+                      <td>430.828.108-37</td>
+                    </tr>
+                    <tr>
+                      <td style="color:#888;padding-bottom:3px;">Nascimento:</td>
+                      <td>03/05/2001</td>
+                    </tr>
                   </table>
                 </div>
               </div>
 
-              <!-- rodapé carteirinha -->
-              <div style="margin-top:16px;padding-top:12px;border-top:1px solid rgba(255,255,255,.15);display:flex;align-items:center;justify-content:space-between;">
+              <!-- Faixa rodapé -->
+              <div style="background:#f0f2f8;border-top:1px solid #ddd;padding:6px 12px;display:flex;align-items:center;justify-content:space-between;">
                 <div>
-                  <div style="font-size:.62rem;color:rgba(255,255,255,.5);">Universidade de Ribeirão Preto</div>
-                  <div style="font-size:.62rem;color:rgba(255,255,255,.5);">Av. Costábile Romano, 2.201 — Ribeirânia</div>
+                  <div style="font-size:.6rem;color:#555;font-weight:700;">Válida até: <span style="color:#b71c1c;">31/12/2026</span></div>
+                  <div style="font-size:.56rem;color:#999;">Nº 2026-202103456-08 · Lei 12.933/2013</div>
                 </div>
-                <!-- QR simulado -->
-                <div style="background:#fff;border-radius:4px;padding:4px;">
-                  <svg viewBox="0 0 36 36" width="36" height="36">
-                    <rect x="1" y="1" width="13" height="13" rx="1" fill="none" stroke="#000" stroke-width="1.2"/>
-                    <rect x="3" y="3" width="9" height="9" fill="#000"/>
-                    <rect x="22" y="1" width="13" height="13" rx="1" fill="none" stroke="#000" stroke-width="1.2"/>
-                    <rect x="24" y="3" width="9" height="9" fill="#000"/>
-                    <rect x="1" y="22" width="13" height="13" rx="1" fill="none" stroke="#000" stroke-width="1.2"/>
-                    <rect x="3" y="24" width="9" height="9" fill="#000"/>
-                    <rect x="18" y="18" width="3" height="3" fill="#000"/>
-                    <rect x="23" y="18" width="3" height="3" fill="#000"/>
-                    <rect x="28" y="18" width="3" height="3" fill="#000"/>
-                    <rect x="18" y="23" width="3" height="3" fill="#000"/>
-                    <rect x="28" y="23" width="3" height="3" fill="#000"/>
-                    <rect x="23" y="28" width="3" height="3" fill="#000"/>
-                    <rect x="28" y="28" width="3" height="3" fill="#000"/>
-                    <rect x="18" y="28" width="3" height="3" fill="#000"/>
-                  </svg>
+                <!-- assinatura simulada -->
+                <div style="text-align:center;">
+                  <div style="font-family:Georgia,serif;font-size:.85rem;color:#1e3d7a;font-style:italic;line-height:1;">Rafael</div>
+                  <div style="border-top:1px solid #999;font-size:.52rem;color:#aaa;margin-top:1px;padding-top:1px;width:70px;">Assinatura do Aluno</div>
                 </div>
-              </div>
-
-              <!-- chip situação -->
-              <div style="position:absolute;top:18px;right:18px;">
-                <span style="background:rgba(39,174,96,.25);border:1px solid rgba(39,174,96,.5);color:#6af59a;font-size:.62rem;font-weight:700;padding:3px 8px;border-radius:20px;letter-spacing:.5px;">● ATIVO</span>
               </div>
             </div>
 
-            <!-- VERSO -->
-            <div style="
-              background: #fff;
-              border-radius: 14px;
-              padding: 18px 22px;
-              box-shadow: 0 4px 16px rgba(0,0,0,.1);
-              border: 1px solid #e0e4f0;
-              margin-bottom: 20px;
-            ">
-              <div style="font-size:.72rem;font-weight:700;color:#1e3d7a;margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px;">Informações e Termos</div>
-              <p style="font-size:.71rem;color:#666;line-height:1.6;margin-bottom:8px;">Esta carteirinha é de uso pessoal e intransferível. Confere ao portador o direito à meia-entrada em eventos culturais, esportivos e de lazer, conforme Lei Federal nº 12.933/2013.</p>
-              <p style="font-size:.71rem;color:#666;line-height:1.6;margin-bottom:10px;">Em caso de perda ou roubo, comunique imediatamente à Secretaria Acadêmica para bloqueio e emissão de segunda via.</p>
-              <div style="display:flex;justify-content:space-between;align-items:flex-end;">
-                <div>
-                  <div style="font-size:.68rem;color:#aaa;">Emitida em: 03/03/2026</div>
-                  <div style="font-size:.68rem;color:#aaa;">Válida até: 31/12/2026</div>
-                  <div style="font-size:.68rem;color:#aaa;">Nº: 2026-202103456-08</div>
-                </div>
-                <img src="logo.png" alt="UNAERP" style="height:24px;opacity:.5;"/>
-              </div>
-            </div>
-
-            <!-- Botões ação -->
-            <div style="display:flex;gap:10px;">
-              <button onclick="window.print()" style="flex:1;padding:11px;background:#1e3d7a;color:#fff;border:none;border-radius:6px;font-size:.85rem;font-weight:700;cursor:pointer;">🖨 Imprimir / Salvar PDF</button>
-              <button onclick="alert('Carteirinha salva nos documentos!')" style="flex:1;padding:11px;background:#2ca4a0;color:#fff;border:none;border-radius:6px;font-size:.85rem;font-weight:700;cursor:pointer;">📱 Salvar</button>
-            </div>
+            <button onclick="window.print()" style="width:100%;padding:11px;background:#1e3d7a;color:#fff;border:none;border-radius:4px;font-size:.85rem;font-weight:700;cursor:pointer;margin-bottom:8px;">🖨 Imprimir / Salvar PDF</button>
+            <p style="font-size:.7rem;color:#aaa;text-align:center;">Dica: no iPhone, use Compartilhar → Imprimir → salve como PDF</p>
           </div>
         </div>
 
